@@ -13,8 +13,8 @@ import OTPEmailTemplate from "../utils/OTPEmailTemplate.js";
 
 const cookieOption = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production", // Use secure cookies only in production (HTTPS)
-  sameSite: "None", // SameSite only required for cross-origin requests (production)
+  secure: process.env.NODE_ENV === "production",
+  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
 };
 
 export const Signup = async (req, res) => {
@@ -22,17 +22,22 @@ export const Signup = async (req, res) => {
 
   try {
     if (!name || !email || !password) {
-      return res.status(400).json({ message: "Fill all the credentials" });
-    }
-    if (password.length < 6) {
       return res
         .status(400)
-        .json({ message: "Password must be at least 6 characters long" });
+        .json({ message: "Fill all the credentials", success: false });
+    }
+    if (password.length < 6) {
+      return res.status(400).json({
+        message: "Password must be at least 6 characters long",
+        success: false,
+      });
     }
 
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res
+        .status(400)
+        .json({ message: "User already exists", success: false });
     }
 
     const salt = await bcryptjs.genSalt(10);
@@ -52,10 +57,12 @@ export const Signup = async (req, res) => {
       html: verifyEmailTemplate({ url: verifyEmailUrl }),
     });
 
-    return res.status(201).json(userData);
+    return res.status(201).json({ user: userData, success: true });
   } catch (error) {
     console.log("Error in signup controller ", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
   }
 };
 
@@ -83,23 +90,33 @@ export const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: "Fill all the credentials" });
+      return res
+        .status(400)
+        .json({ message: "Fill all the credentials", success: false });
     }
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      return res
+        .status(400)
+        .json({ message: "Invalid credentials", success: false });
     }
     const checkPassword = await bcryptjs.compare(password, user.password);
 
     if (!checkPassword) {
-      return res.status(400).json({ message: "Invalid User Data." });
+      return res
+        .status(400)
+        .json({ message: "Invalid User Data", success: false });
     }
+    const updatedUser = await UserModel.findByIdAndUpdate(user._id, {
+      last_login_data: new Date(),
+      new: true,
+    });
 
     const accessToken = generateAccessToken(user._id);
     const refreshToken = await generateRefreshToken(user._id);
 
     res.cookie("accessToken", accessToken, {
-      maxAge: 5 * 60 * 60 * 1000,
+      maxAge: 10 * 60 * 1000,
       ...cookieOption,
     });
     res.cookie("refreshToken", refreshToken, {
@@ -107,10 +124,12 @@ export const Login = async (req, res) => {
       ...cookieOption,
     });
 
-    return res.status(200).json({ user });
+    return res.status(200).json({ user: updatedUser, success: true });
   } catch (error) {
     console.log("Error in login controller: ", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
   }
 };
 
@@ -122,10 +141,12 @@ export const Logout = async (req, res) => {
     const user = req.user;
     await UserModel.findByIdAndUpdate(user._id, { refresh_token: "" });
 
-    res.status(200).json({ message: "Logout Successful" });
+    res.status(200).json({ message: "Logout Successful", success: true });
   } catch (error) {
     console.log("Error in logout controller: ", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
   }
 };
 
@@ -154,6 +175,7 @@ export const UploadAvatar = async (req, res) => {
     );
 
     return res.status(200).json({
+      success: true,
       message: "Avatar uploaded successfully",
       user: userUpdate,
     });
@@ -185,7 +207,7 @@ export const UpdateUserDetail = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Update Successful", user: updateUser });
+      .json({ message: "Update Successful", user: updateUser,success: true });
   } catch (error) {
     console.log("Error in updateUserDetail controller: ", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -196,12 +218,16 @@ export const ForgetPassword = async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) {
-      return res.status(400).json({ message: "Fill in all credentials" });
+      return res
+        .status(400)
+        .json({ message: "Fill in all credentials", success: false });
     }
 
     const user = await UserModel.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "User Not Found" });
+      return res
+        .status(400)
+        .json({ message: "User Not Found", success: false });
     }
 
     const OTP = generateOTP(6);
@@ -214,82 +240,117 @@ export const ForgetPassword = async (req, res) => {
     });
 
     if (!updateUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
     }
 
     await sendEmail({
       sendTo: user.email,
       subject: "Reset Your Password",
-      html: OTPEmailTemplate({OTP}), 
+      html: OTPEmailTemplate({ OTP }),
     });
 
-    res.status(200).json({ message: "OTP sent successfully", OTP });
+    res
+      .status(200)
+      .json({ message: "OTP sent successfully", OTP, success: true });
   } catch (error) {
-      console.log("Error in forgetPassword controller: ", error.message);
-      return res.status(500).json({ message: "Internal Server Error" });
-    }
+    console.log("Error in forgetPassword controller: ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
+  }
 };
 
-export const VerifyForgotPasswordOTP = async (req,res) => {
-    try {
-        const { email, otp } = req.body
-        if (!email || !otp) {
-            return res.status(400).json({ message: 'Fill all credentials', success: false });
-        }
-        
-        const user = await UserModel.findOne({ email })
-        if(!user){
-            return res.status(400).json({ message: "User Not Found", success: false });
-        }
-        
-        if(otp !== user.forgot_password_otp){
-            return res.status(400).json({ message: "Invalid OTP", success: false });
-        }
-        
-        if(user.forgot_password_expiry < new Date()){
-            return res.status(400).json({ message: "OTP has expired", success: false });
-        }
-
-        res.status(200).json({ success: true, message: 'OTP verified successfully.' });
-        
-    } catch (error) {
-        console.log("Error in verifyForgetPasswordOTP controller: ", error.message);
-        return res.status(500).json({ message: "Internal Server Error", success: false });
+export const VerifyForgotPasswordOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res
+        .status(400)
+        .json({ message: "Fill all credentials", success: false });
     }
-}
 
-export const ResetPassword = async (req,res) => {
-    try {
-        const { email, password } = req.body
-        if (!email || !password) {
-            return res.status(400).json({ message: 'Fill all credentials', success: false });
-        }
-
-        const user = await UserModel.findOne({email})
-        if(!user){
-            return res.status(400).json({ message: "User Not Found", success: false });
-        }
-
-        const salt = await bcryptjs.genSalt(10)
-        const hashedPassword = await bcryptjs.hash(password,salt)
-
-        await UserModel.findByIdAndUpdate(user._id, { forgot_password_otp: '', forgot_password_expiry: '' });
-
-        const updatedUser = await UserModel.findByIdAndUpdate(user._id,{password: hashedPassword},{new: true})
-        
-        res.status(200).json({ success: true, message: 'Password changed successfully.',user: updatedUser });
-    } catch (error) {
-        console.log("Error in resetPassword controller: ", error.message);
-        return res.status(500).json({ message: "Internal Server Error", success: false });
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User Not Found", success: false });
     }
-}
 
-export const RefreshToken = async (req,res) => {
-    try {
-    const refreshToken = req.cookies.refreshToken || (req.headers?.authorization && req.headers.authorization.split(" ")[1]);  // for mobile
+    if (otp !== user.forgot_password_otp) {
+      return res.status(400).json({ message: "Invalid OTP", success: false });
+    }
 
-    if(!refreshToken){
-        return res.status(401).json({ message: "Unauthorized: Invalid Token", success: false });
+    if (user.forgot_password_expiry < new Date()) {
+      return res
+        .status(400)
+        .json({ message: "OTP has expired", success: false });
+    }
+
+    res
+      .status(200)
+      .json({ success: true, message: "OTP verified successfully." });
+  } catch (error) {
+    console.log("Error in verifyForgetPasswordOTP controller: ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const ResetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Fill all credentials", success: false });
+    }
+
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "User Not Found", success: false });
+    }
+
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(password, salt);
+
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      user._id,
+      {
+        password: hashedPassword,
+        forgot_password_otp: "",
+        forgot_password_expiry: "",
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Password changed successfully.",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log("Error in resetPassword controller: ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const RefreshToken = async (req, res) => {
+  try {
+    const refreshToken =
+      req.cookies.refreshToken ||
+      (req.headers?.authorization && req.headers.authorization.split(" ")[1]); // for mobile
+
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ message: "Unauthorized: Invalid Token", success: false });
     }
 
     let decode;
@@ -297,24 +358,41 @@ export const RefreshToken = async (req,res) => {
       decode = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
     } catch (err) {
       console.log("JWT Error:", err.message);
+      return res.status(401).json({
+        message: "Unauthorized: Invalid or Expired Token",
+        success: false,
+      });
+    }
+
+    if (!decode) {
       return res
         .status(401)
-        .json({ message: "Unauthorized: Invalid or Expired Token", success: false });
+        .json({ message: "Unauthorized: Invalid Token", success: false });
     }
-
-    if(!decode){
-      return res.status(401).json({ message: "Unauthorized: Invalid Token", success: false });
-    }
-    const newAccessToken = generateAccessToken(decode.userId)
+    const newAccessToken = generateAccessToken(decode.userId);
     res.cookie("accessToken", newAccessToken, {
-        maxAge: 5 * 60 * 60 * 1000,
-        ...cookieOption,
-      });
+      maxAge: 10 * 60 * 1000,
+      ...cookieOption,
+    });
 
-    return res.status(200).json({message: "New Access Token Generated",success: true})
-        
-    } catch (error) {
-        console.log("Error in refreshToken controller: ", error.message);
-        return res.status(500).json({ message: "Internal Server Error", success: false });
-    }
-}
+    return res
+      .status(200)
+      .json({ message: "New Access Token Generated", success: true });
+  } catch (error) {
+    console.log("Error in refreshToken controller: ", error.message);
+    return res
+      .status(500)
+      .json({ message: "Internal Server Error", success: false });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    return res.status(200).json({ user: req.user });
+  } catch (error) {
+    console.log("Error in check auth controller: ", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal Server error", error: error.message });
+  }
+};
