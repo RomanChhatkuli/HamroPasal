@@ -8,6 +8,12 @@ import Profile from './pages/Profile.jsx'
 import Order from './pages/Order.jsx'
 import { useUserStore } from './stores/useUserStore.js'
 import { Loader2 } from 'lucide-react'
+import Products from './Admin/Pages/Products.jsx'
+import SubCategory from './Admin/Pages/SubCategory.jsx'
+import Category from './Admin/Pages/Category.jsx'
+import UploadProduct from './Admin/Pages/UploadProduct.jsx'
+import AdminDashboard from './Admin/Pages/AdminDashboard.jsx'
+import Admin from './Admin/Admin.jsx'
 
 function Router() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -31,11 +37,19 @@ function Router() {
           <Route index element={<Home />} />
           <Route path='search' element={<SearchPage />} />
 
-          <Route path='dashboard' element={user ? <Dashboard /> : <Home/>} >
+          <Route path='dashboard' element={user ? <Dashboard /> : <Home />} >
             <Route path='profile' element={<Profile />} />
             <Route path='order' element={<Order />} />
           </Route>
 
+        </Route>
+        
+        <Route path='/admin' element={<Admin />} >
+          <Route path='dashboard' element={<AdminDashboard />} />
+          <Route path='category' element={<Category />} />
+          <Route path='sub-category' element={<SubCategory />} />
+          <Route path='products' element={<Products />} />
+          <Route path='upload-product' element={<UploadProduct />} />
         </Route>
 
       </Routes>

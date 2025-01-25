@@ -4,7 +4,8 @@ import {
     ShoppingBag,
     LogOut,
     Menu,
-    X
+    X,
+    UserRoundCog
 } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore.js';
 import { Link } from 'react-router-dom';
@@ -76,6 +77,18 @@ function MobileAccountMenu() {
                         >
                             <User className="w-6 h-6 text-gray-600" />
                             <span className="text-gray-700 text-lg font-medium">Manage My Account</span>
+                        </Link>
+
+                        {/* Admin */}
+                        <Link
+                            to={'/admin/dashboard'}
+                            className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors text-left"
+                            onClick={() => {
+                                setIsMobileMenu()
+                            }}
+                        >
+                            <UserRoundCog className="w-6 h-6 text-gray-600" />
+                            <span className="text-gray-700 text-lg font-medium">Admin Panel</span>
                         </Link>
 
                         {/* My Orders */}

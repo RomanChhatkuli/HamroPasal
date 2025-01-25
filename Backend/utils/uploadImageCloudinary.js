@@ -15,7 +15,7 @@ const uploadImage = async (image, folder,imageName) => {
       .upload_stream(
         {
           folder: `HamroPasal/${folder}`,
-          public_id: imageName, // Set custom image name here
+          public_id: imageName || undefined, // Set custom image name here
           overwrite: true,
           invalidate: true
         },

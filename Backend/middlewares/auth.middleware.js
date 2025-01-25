@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 export const protectRoute = async (req, res, next) => {
   try {
-    const accessToken = req.cookies.accessToken || (req.headers?.authorization && req.headers.authorization.split(" ")[1]);  // for mobile
+    const accessToken = req.cookies.accessToken
 
     if (!accessToken) {
       return res
