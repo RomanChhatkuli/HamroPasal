@@ -8,7 +8,7 @@ import { useProductStore } from '../Stores/useProductStore.js';
 function Products() {
   const { categories, fetchCategory } = useCategoryStore()
   const { subCategories, fetchSubCategory } = useSubCategoryStore()
-  const { loading, fetchProduct, editProduct, products, isFetching, deleteProduct, isAddModalOpen, isDeleteModalOpen, setIsDeleteModalOpen, setIsAddModalOpen } = useProductStore()
+  const { loading, fetchProduct, editProduct, products, isFetchingProduct, deleteProduct, isAddModalOpen, isDeleteModalOpen, setIsDeleteModalOpen, setIsAddModalOpen } = useProductStore()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -52,12 +52,12 @@ function Products() {
   }, []);
 
   useEffect(() => {
-    fetchCategory()
-    fetchSubCategory()
-    fetchProduct()
+      fetchCategory()
+      fetchSubCategory()
+      fetchProduct()
   }, [])
 
-  if (isFetching) {
+  if (isFetchingProduct) {
     return (<div className="w-[80vw] h-[70vh] flex justify-center items-center">
       <Loader2 size={35} className='text-yellow-500 animate-spin' />
     </div>)

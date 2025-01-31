@@ -3,7 +3,7 @@ import Axios from "../../utils/Axios";
 import toast from "react-hot-toast";
 
 export const useSubCategoryStore = create((set, get) => ({
-  isFetching: false,
+  isFetchingSubCategory: false,
   loading: false,
   subCategories: [],
   isAddModalOpen: false,
@@ -22,7 +22,7 @@ export const useSubCategoryStore = create((set, get) => ({
 
   fetchSubCategory: async () => {
     try {
-      set({ isFetching: true });
+      set({ isFetchingSubCategory: true });
       const response = await Axios.get("/sub-category/get-subCategory");
       if (response.data.success === true) {
         get().setSubCategories(response.data.subCategories);
@@ -35,7 +35,7 @@ export const useSubCategoryStore = create((set, get) => ({
           "An error occurred during fetch Sub-Category"
       );
     } finally {
-      set({ isFetching: false });
+      set({ isFetchingSubCategory: false });
     }
   },
 

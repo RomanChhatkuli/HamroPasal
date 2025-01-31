@@ -3,7 +3,7 @@ import { Plus, Pencil, Trash2, X, Upload, Loader2, Loader } from 'lucide-react';
 import { useCategoryStore } from '../Stores/useCategoryStore.js';
 
 export default function Categories() {
-  const { fetchCategory, isFetching, categories, deleteCategory, addCategory, editCategory, loading, isDeleteModalOpen, setIsDeleteModalOpen, isAddModalOpen, setIsAddModalOpen } = useCategoryStore()
+  const { fetchCategory, isFetchingCategory, categories, deleteCategory, addCategory, editCategory, loading, isDeleteModalOpen, setIsDeleteModalOpen, isAddModalOpen, setIsAddModalOpen } = useCategoryStore()
 
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [formData, setFormData] = useState({ name: '', image: null });
@@ -14,7 +14,7 @@ export default function Categories() {
     fetchCategory()
   }, [])
 
-  if (isFetching) {
+  if (isFetchingCategory) {
     return (<div className="w-[80vw] h-[70vh] flex justify-center items-center">
       <Loader2 size={35} className='text-yellow-500 animate-spin' />
     </div>)

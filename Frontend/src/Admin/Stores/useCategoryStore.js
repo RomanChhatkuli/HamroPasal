@@ -3,7 +3,7 @@ import Axios from "../../utils/Axios";
 import toast from "react-hot-toast";
 
 export const useCategoryStore = create((set, get) => ({
-  isFetching: false,
+  isFetchingCategory: false,
   loading: false,
   categories: [],
   isAddModalOpen: false,
@@ -22,7 +22,7 @@ export const useCategoryStore = create((set, get) => ({
 
   fetchCategory: async () => {
     try {
-      set({ isFetching: true });
+      set({ isFetchingCategory: true });
       const response = await Axios.get("/category/get-category");
       if (response.data.success === true) {
         get().setCategories(response.data.Categories);
@@ -35,7 +35,7 @@ export const useCategoryStore = create((set, get) => ({
           "An error occurred during fetchCategory"
       );
     } finally {
-      set({ isFetching: false });
+      set({ isFetchingCategory: false });
     }
   },
 

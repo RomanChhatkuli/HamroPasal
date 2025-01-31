@@ -82,10 +82,11 @@ function Header() {
 
       )}
 
-      <div className={`lg:hidden mb-2 mt-2`}>
-        <SearchBar />
-      </div>
-
+      {(location.pathname === '/search' || location.pathname === '/') &&
+        <div className={`lg:hidden mb-2 mt-2`}>
+          <SearchBar />
+        </div>
+      }
       {isLogin && <Login />}
       {isSignup && <Signup />}
       {isForgotPassword && <ForgotPassword />}

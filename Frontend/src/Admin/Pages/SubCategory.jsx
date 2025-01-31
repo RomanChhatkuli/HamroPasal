@@ -6,7 +6,7 @@ import toast from 'react-hot-toast';
 
 function SubCategory() {
   const { categories, fetchCategory } = useCategoryStore()
-  const { loading, isFetching, editSubCategory, addSubCategory, subCategories, setIsDeleteModalOpen, isDeleteModalOpen, deleteSubCategory, fetchSubCategory, isAddModalOpen, setIsAddModalOpen } = useSubCategoryStore()
+  const { loading, isFetchingSubCategory, editSubCategory, addSubCategory, subCategories, setIsDeleteModalOpen, isDeleteModalOpen, deleteSubCategory, fetchSubCategory, isAddModalOpen, setIsAddModalOpen } = useSubCategoryStore()
 
   const [formData, setFormData] = useState({
     name: '',
@@ -40,7 +40,7 @@ function SubCategory() {
     fetchSubCategory()
   }, [])
 
-  if (isFetching) {
+  if (isFetchingSubCategory) {
     return (<div className="w-[80vw] h-[70vh] flex justify-center items-center">
       <Loader2 size={35} className='text-yellow-500 animate-spin' />
     </div>)

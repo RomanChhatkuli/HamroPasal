@@ -8,6 +8,7 @@ const subCategoryRouter = express.Router()
 subCategoryRouter.post('/add-subCategory',protectRoute,upload.single('Sub-Category'),addSubCategory)
 subCategoryRouter.put('/edit-subCategory',protectRoute,upload.single('Sub-Category'),editSubCategory)
 subCategoryRouter.post('/delete-subCategory',protectRoute,deleteSubCategory)
-subCategoryRouter.get('/get-subCategory',protectRoute,getSubCategory)
+
+subCategoryRouter.get('/get-subCategory',getSubCategory)
 
 export default subCategoryRouter;

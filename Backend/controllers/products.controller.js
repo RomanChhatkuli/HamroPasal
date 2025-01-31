@@ -194,3 +194,88 @@ export const getProduct = async (req, res) => {
             .json({ message: "Internal Server Error", success: false });
     }
 };
+export const getProductByCategory = async (req, res) => {
+    try {
+        const { id } = req.body
+        if (!id) {
+            return res
+                .status(400)
+                .json({ message: "Product id not found", success: false });
+        }
+        const products = await ProductModel.find({ 
+            category : { $in : id }
+        }).limit(15)
+
+        if (!products) {
+            return res
+                .status(500)
+                .json({ message: "Product fetch failed", success: false });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product fetch successfull",
+            products,
+        });
+    } catch (error) {
+        console.log("Error in get getProductByCategory controller: ", error.message);
+        return res
+            .status(500)
+            .json({ message: "Internal Server Error", success: false });
+    }
+};
+export const getProductDetail = async (req, res) => {
+    try {
+        const { id } = req.body
+        if (!id) {
+            return res
+                .status(400)
+                .json({ message: "Product id not found", success: false });
+        }
+        const product = await ProductModel.findById(id);
+        if (!product) {
+            return res
+                .status(500)
+                .json({ message: "Product Detail fetch failed", success: false });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product fetch successfull",
+            product,
+        });
+    } catch (error) {
+        console.log("Error in get Product detail controller: ", error.message);
+        return res
+            .status(500)
+            .json({ message: "Internal Server Error", success: false });
+    }
+};
+export const getProductByCategoryAndSubcategory = async (req, res) => {
+    try {
+        const { categoryId, subCategoryId } = req.body
+        if (!categoryId || !subCategoryId ) {
+            return res
+            .status(400)
+            .json({ message: "Id's not found", success: false });
+        }
+        const products = await ProductModel.find({ 
+            category : { $in : categoryId },
+            subCategory: {$in : subCategoryId}
+        })
+
+        if (!products) {
+            return res
+                .status(500)
+                .json({ message: "Product fetch by category and subcategory failed", success: false });
+        }
+        return res.status(200).json({
+            success: true,
+            message: "Product fetch successfull",
+            products,
+        });
+    } catch (error) {
+        console.log("Error in get getProductByCategoryAndSubCategory controller: ", error.message);
+        return res
+            .status(500)
+            .json({ message: "Internal Server Error", success: false });
+    }
+};

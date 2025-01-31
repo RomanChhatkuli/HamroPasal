@@ -3,12 +3,18 @@ import Axios from "../../utils/Axios";
 import toast from "react-hot-toast";
 
 export const useProductStore = create((set, get) => ({
-  isFetching: false,
+  isFetchingProduct: false,
+  isFetchingCategoryWiseProduct: false,
+  isFetchingProductDetails: false,
   loading: false,
   products: [],
+  productDetail: {},
   isAddModalOpen: false,
   isDeleteModalOpen: false,
   
+  setProductDetail: (data) => {
+    set({ productDetail: data });
+  },
   setIsDeleteModalOpen: (data) => {
     set({ isDeleteModalOpen: data });
   },
@@ -22,7 +28,7 @@ export const useProductStore = create((set, get) => ({
 
   fetchProduct: async () => {
     try {
-      set({ isFetching: true });
+      set({ isFetchingProduct: true });
       const response = await Axios.get("/product/get-product");
       if (response.data.success === true) {
         get().setProduct(response.data.products);
@@ -35,7 +41,7 @@ export const useProductStore = create((set, get) => ({
           "An error occurred during fetch product"
       );
     } finally {
-      set({ isFetching: false });
+      set({ isFetchingProduct: false });
     }
   },
 
@@ -94,4 +100,65 @@ export const useProductStore = create((set, get) => ({
       set({ loading: false });
     }
   },  
+
+  fetchCategoryWiseProduct: async (id) => {
+    try {
+      set({ isFetchingCategoryWiseProduct: true });
+      const response = await Axios.post("/product/get-product-by-category",{id});
+      if (response.data.success === true) {
+        return response.data.products
+      } else {
+        toast.error(response?.data?.message);
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred during Fetch Category Wise Product"
+      );
+    } finally {
+      setTimeout(() => {
+        set({ isFetchingCategoryWiseProduct: false });
+      },500)
+    }
+  },
+  fetchProductByCategoryAndSubcategory: async (categoryId,subCategoryId) => {
+    try {
+      set({ isFetchingProductByCategoryAndSubcategory: true });
+      const response = await Axios.post("/product/get-product-by-category-and-subcategory",{categoryId,subCategoryId});
+      if (response.data.success === true) {
+        return response.data.products
+      } else {
+        toast.error(response?.data?.message);
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred during Fetch Category Wise Product"
+      );
+    } finally {
+      setTimeout(() => {
+        set({ isFetchingProductByCategoryAndSubcategory: false });
+      },500)
+    }
+  },
+  fetchProductDetail: async (id) => {
+    try {
+      set({isFetchingProductDetails: true})
+      const response = await Axios.post("/product/get-product-detail",{id});
+      if (response.data.success === true) {
+        get().setProductDetail(response.data.product)
+      } else {
+        toast.error(response?.data?.message);
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+        "An error occurred during Fetch Category Wise Product"
+      );
+    }finally{
+      set({isFetchingProductDetails: false})
+    }
+  },
+  
+
 }));
