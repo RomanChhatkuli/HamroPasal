@@ -1,45 +1,70 @@
-import React, { useEffect } from 'react'
-import banner from '../assets/banner.jpg'
+import React, { useCallback, useEffect, useState } from 'react'
+import panBanner from '../assets/pan.jpg'
 import CategorySkeleton from '../components/CategorySkeleton'
 import { useCategoryStore } from '../Admin/Stores/useCategoryStore'
 import { useSubCategoryStore } from '../Admin/Stores/useSubCategoryStore';
 import CategoryWiseProduct from '../components/CategoryWiseProduct';
 import { useNavigate } from 'react-router-dom';
+import { banner } from '../utils/banner';
+import cigratte from '../assets/cigratte.webp'
+
+function sanitizeName(name) {
+  return name
+    .trim()
+    .replace(/[^a-zA-Z0-9_\/.]/g, '');
+}
 
 function Home() {
-  const { isFetchingCategory, categories, fetchCategory } = useCategoryStore();
-  const { subCategories, fetchSubCategory } = useSubCategoryStore()
+  const { isFetchingCategory, categories } = useCategoryStore();
+  const { subCategories } = useSubCategoryStore()
   const navigate = useNavigate()
+  const [visibleCount, setVisibleCount] = useState(8)
 
-  useEffect(() => {
-    fetchCategory()
-    fetchSubCategory()
-  }, [])
-  
-  function sanitizeName(name) {
-    return name
-      .trim()
-      .replace(/[^a-zA-Z0-9_\/.]/g, ''); // Remove disallowed characters for cloudniary public_id
-  }
+  const handleRedirectProductPage = useCallback((id, name) => {
+    const subcategory = subCategories.find(sub =>
+      sub.category.some(c => c === id)
+    )
+    if (subcategory) {
+      navigate(`/${sanitizeName(name)}/${id}/${sanitizeName(subcategory.name)}/${subcategory._id}`);
+    }
+  }, [subCategories, navigate]);
 
-  function handleRedirectProductPage(id, name) {
-    const subcategory = subCategories.find(sub => {
-      const filterData = sub.category.some(c => {
-        return c === id
-      })
-
-      return filterData ? true : null
-    })
-    navigate(`/${sanitizeName(name)}/${id}/${sanitizeName(subcategory.name)}/${subcategory._id}`)
-  }
 
   return (
     <section className='lg:px-24 px-1'>
       <div className='container mx-auto'>
-        <div className={`w-full rounded`}>
+        <div className={`w-full rounded hidden lg:block`}
+        onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae","paan corner")}
+        >
           <img
-            src={banner}
-            className='w-full h-24 lg:h-60'
+            srcSet={panBanner}
+            className='w-full'
+            alt='banner'
+          />
+        </div>
+        <div className='ml-9 grid-cols-3 mb-3 hidden lg:grid'>
+          {banner.map((e) => {
+            return (
+              <div 
+              onClick={() => handleRedirectProductPage(e.id,e.name)}
+              >
+                <img
+                  srcSet={e.image}
+                  className='w-96 object-contain'
+                  alt='banner'
+                />
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Mobile Banner  */}
+        <div className={`w-full rounded lg:hidden mb-3 p-2`}
+        onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae","paan corner")}
+        >
+          <img
+            srcSet={cigratte}
+            className='w-full'
             alt='banner'
           />
         </div>
@@ -60,6 +85,7 @@ function Home() {
                         <img
                           src={category.image}
                           alt={category.name}
+                          loading='lazy'
                           className='w-full h-full cursor-pointer object-contain'
                         />
                       </div>
@@ -72,25 +98,28 @@ function Home() {
         </div>
       </div>
 
-      {categories?.map((category, index) => (
+      {categories?.slice(0, visibleCount).map((category, index) => (
         <CategoryWiseProduct
-        key={category?._id + "CategorywiseProduct"}
-        id={category?._id}
-        name={category?.name}
+          key={category?._id + "CategorywiseProduct"}
+          id={category?._id}
+          name={category?.name}
         />
       ))}
+      
+      {visibleCount < categories.length && (
+        <div className="text-center mt-4">
+          <button
+            onClick={() => setVisibleCount((prev) => prev + 6)}
+            className=" text-green-500 mb-4"
+          >
+            Load More
+          </button>
+        </div>
+      )}
+
 
     </section>
   )
 }
 
 export default Home
-{/* <iframe
-  width="100%"
-  height="400"
-  frameBorder="0"
-  scrolling="no"
-  src="https://maps.google.com/maps?width=100%25&amp;height=400&amp;hl=en&amp;q=rural%20health%20education%20and%20service%20center+(Rural%20Health%20Education%20and%20Service%20Center)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
->
-</iframe> */}
-{/* <a href="https://www.gps.ie/">gps systems</a> */ }

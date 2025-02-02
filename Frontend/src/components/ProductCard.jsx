@@ -4,7 +4,7 @@ import { DisplayPriceInRupees } from "../utils/DisplayPriceInRupees";
 import { pricewithDiscount } from "../utils/pricewithDiscount";
 import { Clock } from 'lucide-react';
 
-function CategoryWiseProductCard({product}) {
+function ProductCard({product}) {
     const [randomTime] = useState(() => Math.floor(10 + Math.random() * 5));
     function sanitizeName(name) {
         return name
@@ -17,6 +17,8 @@ function CategoryWiseProductCard({product}) {
             <div className='min-h-20 w-full max-h-24 lg:max-h-32 rounded overflow-hidden'>
                 <img
                     src={product?.image[0]}
+                    loading='lazy'
+                    alt={product?.name}
                     className='w-full h-full object-scale-down lg:scale-125'
                 />
             </div>
@@ -54,7 +56,7 @@ function CategoryWiseProductCard({product}) {
                         product.stock == 0 ? (
                             <p className='text-red-500 text-sm text-center'>Out of stock</p>
                         ) : (
-                            "Helo"
+                            "to do"
                             // <AddToCartButton data={product} />
                         )
                     }
@@ -66,4 +68,4 @@ function CategoryWiseProductCard({product}) {
     )
 }
 
-export default CategoryWiseProductCard
+export default ProductCard

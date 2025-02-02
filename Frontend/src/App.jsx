@@ -7,17 +7,16 @@ import { useSubCategoryStore } from './Admin/Stores/useSubCategoryStore'
 import { useProductStore } from './Admin/Stores/useProductStore'
 import { useEffect } from 'react'
 
-
 function App() {
-  // const { fetchCategory } = useCategoryStore()
-  //   const { fetchSubCategory } = useSubCategoryStore()
-  //   const {  fetchProduct } = useProductStore()
+  const { fetchCategory } = useCategoryStore()
+  const {  fetchSubCategory } = useSubCategoryStore()
+  const { fetchProduct } = useProductStore()
 
-  //   useEffect(() => {
-  //     fetchCategory()
-  //     fetchSubCategory()
-  //     fetchProduct()
-  //   }, [])
+  useEffect(() => {
+    fetchCategory()
+    fetchSubCategory()
+    fetchProduct()
+  }, [fetchCategory, fetchSubCategory, fetchProduct])
 
   return (
     <div>

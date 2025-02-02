@@ -52,10 +52,16 @@ function Products() {
   }, []);
 
   useEffect(() => {
+    if(categories.length === 0){
       fetchCategory()
+    }
+    if(subCategories.length === 0){
       fetchSubCategory()
+    }
+    if(products.length === 0){
       fetchProduct()
-  }, [])
+    }
+  }, [categories,subCategories,products,fetchProduct,fetchSubCategory,fetchCategory])
 
   if (isFetchingProduct) {
     return (<div className="w-[80vw] h-[70vh] flex justify-center items-center">

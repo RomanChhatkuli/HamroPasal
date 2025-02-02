@@ -20,7 +20,7 @@ function Header() {
   const isSearchPage = location.pathname === '/search'
 
   return (
-    <header className='lg:h-[80px] mt-2 lg:mt-1 lg:shadow-md sticky t-0 flex items-center mb-1 flex-col'>
+    <header className='bg-white lg:h-[80px] mt-2 lg:mt-1 lg:shadow-md sticky top-0 flex items-center mb-1 flex-col z-50 '>
       {!(isMobile && isSearchPage) && (
         <div className='container flex items-center h-full justify-between pr-2 mx-auto mb-1'>
           <Link to="/" className='flex text-2xl lg:text-3xl lg:items-center ml-4'>

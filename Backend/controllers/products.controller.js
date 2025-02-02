@@ -204,7 +204,7 @@ export const getProductByCategory = async (req, res) => {
         }
         const products = await ProductModel.find({ 
             category : { $in : id }
-        }).limit(15)
+        }).limit(12)
 
         if (!products) {
             return res

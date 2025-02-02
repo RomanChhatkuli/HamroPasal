@@ -32,7 +32,7 @@ function Router() {
   return (
     <div>
 
-      <Routes>
+      <Routes>  
         <Route path='/' element={<App />}>
 
           <Route index element={<Home />} />
@@ -43,9 +43,9 @@ function Router() {
             <Route path='order' element={<Order />} />
           </Route>
           
-          <Route path=':categoryName/:categoryId/:subcategoryName/:subcategoryId' element={<ProductList />} />
           
         </Route>
+          <Route path=':categoryName/:categoryId/:subcategoryName/:subcategoryId' element={<ProductList />} />
           <Route path='product/:name/:id' element={<ProductDisplayPage />} />
 
 

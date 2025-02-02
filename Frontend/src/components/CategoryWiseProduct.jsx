@@ -1,17 +1,27 @@
-import { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { useProductStore } from "../Admin/Stores/useProductStore";
-import CategoryWiseProductCard from "./CategoryWiseProductCard";
+import ProductCard from "./ProductCard";
 import CategorySkeleton from "./CategorySkeleton";
+import { Link } from "react-router-dom";
+import { useSubCategoryStore } from "../Admin/Stores/useSubCategoryStore";
+
+function sanitizeName(name) {
+    return name
+        .trim()
+        .replace(/[^a-zA-Z0-9_\/.]/g, '');
+}
 
 function CategoryWiseProduct({ id, name }) {
     const { fetchCategoryWiseProduct, isFetchingCategoryWiseProduct } = useProductStore()
+    const { subCategories } = useSubCategoryStore()
     const [data, setData] = useState([])
 
     async function getCategoryWiseProduct() {
         let ans = await fetchCategoryWiseProduct(id)
         setData(ans)
     }
+
     useEffect(() => {
         getCategoryWiseProduct()
     }, [])
@@ -24,17 +34,30 @@ function CategoryWiseProduct({ id, name }) {
         }
     };
 
-    return isFetchingCategoryWiseProduct ?
-    (
-        <div className="max-w-screen mx-auto lg:p-2 ml-4 px-1">
-                <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-                    <CategorySkeleton />
-                </div>
-            </div>
+    const handleRedirectProductPage = useCallback(() => {
+        const subcategory = subCategories.find(sub =>
+            sub.category.some(c => c === id)
         )
-        :
-        (<div>
-            <h2 className="text-xl font-semibold ml-2 mt-4">{name}</h2>
+        if (subcategory) {
+            return `/${sanitizeName(name)}/${id}/${sanitizeName(subcategory.name)}/${subcategory._id}`
+        }
+    }, [subCategories]);
+    const url = handleRedirectProductPage()
+
+    if (isFetchingCategoryWiseProduct) return (
+        <div className="max-w-screen mx-auto lg:p-2 ml-4 px-1">
+            <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
+                <CategorySkeleton />
+            </div>
+        </div>
+    )
+
+    return (
+        <div>
+            <div className="flex justify-between">
+                <h2 className="text-xl font-semibold ml-2 mt-4">{name}</h2>
+                <Link className="mt-6 text-green-700" to={url}>see all</Link>
+            </div>
             <div className="relative">
                 <button
                     className="hidden md:block absolute left-[-10px] top-1/2 transform -translate-y-1/2 bg-white p-2 shadow-xl rounded-full"
@@ -48,7 +71,7 @@ function CategoryWiseProduct({ id, name }) {
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
                     {data?.map((product) => (
-                        <CategoryWiseProductCard product={product} key={product?._id + "CategoryWiseProductCard"} />
+                        <ProductCard product={product} key={product?._id + "CategoryWiseProductCard"} />
                     ))}
                 </div>
                 <button

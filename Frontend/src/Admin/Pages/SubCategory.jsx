@@ -36,9 +36,13 @@ function SubCategory() {
   }, []);
 
   useEffect(() => {
-    fetchCategory()
-    fetchSubCategory()
-  }, [])
+    if(categories.length === 0){
+      fetchCategory()
+    }
+    if(subCategories.length === 0){
+      fetchSubCategory()
+    }
+  }, [fetchCategory,fetchSubCategory])
 
   if (isFetchingSubCategory) {
     return (<div className="w-[80vw] h-[70vh] flex justify-center items-center">

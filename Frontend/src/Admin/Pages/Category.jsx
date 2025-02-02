@@ -11,7 +11,9 @@ export default function Categories() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    fetchCategory()
+    if(categories.length === 0){
+      fetchCategory()
+    }
   }, [])
 
   if (isFetchingCategory) {
