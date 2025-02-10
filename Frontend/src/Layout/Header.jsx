@@ -1,5 +1,5 @@
 import SearchBar from '../components/SearchBar'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ChevronDown, CircleUserRound, ShoppingCart } from 'lucide-react';
 import useMobile from '../Hooks/useMobile.jsx'
 import Login from '../pages/Login.jsx';
@@ -10,12 +10,15 @@ import OTPVerication from '../pages/OTPVerication.jsx';
 import ResetPassword from '../pages/ResetPassword.jsx';
 import AccountMenu from '../components/AccountMenu.jsx';
 import MobileAccountMenu from '../components/MobileAccountMenu.jsx';
+import { useProductStore } from '../Admin/Stores/useProductStore.js';
 
 function Header() {
   const { isLogin, isOTP, setIsLogin, isMenu, setIsMenu, isMobileMenu, setIsMobileMenu, isSignup, isForgotPassword, isResetPassword, user } = useUserStore();
+  const { setInputValue } = useProductStore();
 
   const [isMobile] = useMobile()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const isSearchPage = location.pathname === '/search'
 
@@ -23,10 +26,15 @@ function Header() {
     <header className='bg-white lg:h-[80px] mt-2 lg:mt-1 lg:shadow-md sticky top-0 flex items-center mb-1 flex-col z-50 '>
       {!(isMobile && isSearchPage) && (
         <div className='container flex items-center h-full justify-between pr-2 mx-auto mb-1'>
-          <Link to="/" className='flex text-2xl lg:text-3xl lg:items-center ml-4'>
+          <div 
+          onClick={() =>{
+            setInputValue('')
+            navigate('/')
+          }} 
+          className='flex text-2xl lg:text-3xl lg:items-center ml-4 cursor-pointer'>
             <p className='blue-gradient_text font-bold'>Hamro</p>
             <p className='text-yellow-500 font-semibold'>Pasal</p>
-          </Link>
+          </div>
 
           <div className='hidden lg:flex flex-1'>
             <SearchBar />

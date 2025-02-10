@@ -155,9 +155,9 @@ const ProductDisplay = () => {
 
       {/* Mobile Header */}
       <div className='flex items-center justify-between lg:hidden mt-3 px-3'>
-        <button className="flex items-center text-gray-600">
+        <button className="flex items-center text-gray-600" onClick={() => window.history.back()}>
           <ChevronLeft className="w-5 h-5" />
-          <Link className="ml-1" to={'/'}>Back</Link>
+          <div className="ml-1" >Back</div>
         </button>
         <Link className="flex items-center text-gray-600" to={'/search'}>
           <Search className="w-6 h-6" />

@@ -13,7 +13,11 @@ export const useProductStore = create(
       products: [],
       isAddModalOpen: false,
       isDeleteModalOpen: false,
+      inputValue: '',
     
+      setInputValue: (data) => {
+        set({ inputValue: data });
+      },
       setIsDeleteModalOpen: (data) => {
         set({ isDeleteModalOpen: data });
       },

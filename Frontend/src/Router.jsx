@@ -16,6 +16,7 @@ import AdminDashboard from './Admin/Pages/AdminDashboard.jsx'
 import Admin from './Admin/Admin.jsx'
 import ProductList from './pages/ProductList.jsx'
 import ProductDisplayPage from './pages/ProductDisplayPage.jsx'
+import NotFoundPage from './components/NotFoundPage.jsx'
 
 function Router() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -57,6 +58,8 @@ function Router() {
           <Route path='products' element={<Products />} />
           <Route path='upload-product' element={<UploadProduct />} />
         </Route>
+
+        <Route path="*" element={<NotFoundPage />} />
 
       </Routes>
     </div>

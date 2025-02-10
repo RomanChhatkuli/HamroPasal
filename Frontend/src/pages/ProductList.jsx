@@ -83,7 +83,7 @@ function ProductList() {
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-[80px] z-40 hidden lg:block">
         <div className="max-w-7xl mx-auto p-2 px-16">
-          <nav className="flex space-x-8 relative">
+          <nav className="flex space-x-7 relative">
             {mainCategories.map((category) => (
               <button
                 key={`${category._id}-mainCategory`}

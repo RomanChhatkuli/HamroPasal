@@ -7,6 +7,8 @@ import CategoryWiseProduct from '../components/CategoryWiseProduct';
 import { useNavigate } from 'react-router-dom';
 import { banner } from '../utils/banner';
 import cigratte from '../assets/cigratte.webp'
+import InfiniteScroll from 'react-infinite-scroll-component'
+
 
 function sanitizeName(name) {
   return name
@@ -34,7 +36,7 @@ function Home() {
     <section className='lg:px-24 px-1'>
       <div className='container mx-auto'>
         <div className={`w-full rounded hidden lg:block`}
-        onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae","paan corner")}
+          onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae", "paan corner")}
         >
           <img
             srcSet={panBanner}
@@ -43,10 +45,11 @@ function Home() {
           />
         </div>
         <div className='ml-9 grid-cols-3 mb-3 hidden lg:grid'>
-          {banner.map((e) => {
+          {banner.map((e, index) => {
             return (
-              <div 
-              onClick={() => handleRedirectProductPage(e.id,e.name)}
+              <div
+                key={index}
+                onClick={() => handleRedirectProductPage(e.id, e.name)}
               >
                 <img
                   srcSet={e.image}
@@ -60,7 +63,7 @@ function Home() {
 
         {/* Mobile Banner  */}
         <div className={`w-full rounded lg:hidden mb-3 p-2`}
-        onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae","paan corner")}
+          onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae", "paan corner")}
         >
           <img
             srcSet={cigratte}
@@ -97,7 +100,13 @@ function Home() {
           }
         </div>
       </div>
-
+      {/* <InfiniteScroll
+        dataLength={20} //This is important field to render the next data
+        next={loadMoreProducts}
+        hasMore={true}
+        loader={<h4>Loading...</h4>}
+      >
+      </InfiniteScroll> */}
       {categories?.slice(0, visibleCount).map((category, index) => (
         <CategoryWiseProduct
           key={category?._id + "CategorywiseProduct"}
@@ -105,7 +114,7 @@ function Home() {
           name={category?.name}
         />
       ))}
-      
+
       {visibleCount < categories.length && (
         <div className="text-center mt-4">
           <button
