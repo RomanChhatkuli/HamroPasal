@@ -28,6 +28,10 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({extended: true}))
 
+app.get("/api", (req,res) =>{
+    res.json({message: "Server Working"})
+})
+
 app.use("/api/auth", authRouter)
 app.use("/api/category", categoryRouter)
 app.use("/api/sub-category", subCategoryRouter)
