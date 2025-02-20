@@ -6,6 +6,7 @@ import { useSubCategoryStore } from '../Admin/Stores/useSubCategoryStore';
 import { useCategoryStore } from '../Admin/Stores/useCategoryStore';
 import ProductCard from '../components/ProductCard';
 import Header from '../Layout/Header';
+import Footer from '../Layout/Footer'
 
 function sanitizeName(name) {
   return name
@@ -174,6 +175,7 @@ function ProductList() {
           </div>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }

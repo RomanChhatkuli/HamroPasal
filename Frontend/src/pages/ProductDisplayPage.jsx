@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Truck, Tag, ChevronLeft, Plus, Minus, CheckCircle, AlertCircle, Search } from 'lucide-react';
+import { Rocket, Tag, ShoppingCart, ChevronLeft, CheckCircle, AlertCircle, Search } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { useProductStore } from '../Admin/Stores/useProductStore';
 import Header from '../Layout/Header';
+import Footer from '../Layout/Footer'
+import AddToCartButton from '../components/AddToCartButton';
 
 const ProductDisplay = () => {
-  const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
   const { fetchProductDetail } = useProductStore();
   const [product, setProduct] = useState({
@@ -49,22 +50,40 @@ const ProductDisplay = () => {
 
       {/* Pricing Section */}
       <div className="mb-3 lg:mb-6">
-        <div className="flex items-center gap-3">
-          <span className="text-lg lg:text-3xl font-bold text-gray-800">
-            Rs.{Number(calculatedPrice).toFixed(0)}
-          </span>
-          {product?.discount > 0 && (
-            <>
-              <span className="text-gray-500 line-through">Rs.{product?.price}</span>
-              <span className="bg-green-100 text-green-700 px-2 py-1 rounded-md text-xs lg:text-sm">
-                {product?.discount}% OFF
-              </span>
-            </>
+        <div className='flex items-center justify-between'>
+
+          <div className="flex items-center gap-3">
+            <span className="text-lg lg:text-3xl font-bold text-gray-800">
+              Rs.{Number(calculatedPrice).toFixed(0)}
+            </span>
+            {product?.discount > 0 && (
+              <>
+                <span className="text-gray-500 line-through">Rs.{product?.price}</span>
+                <span className="bg-green-100 text-green-700 px-2 py-1 rounded-md text-xs lg:text-sm">
+                  {product?.discount}% OFF
+                </span>
+              </>
+            )}
+          </div>
+
+          {/* Add to Cart Button */}
+          {product?.stock > 0 ? (
+            <div className='scale-[1.15]'>
+              <AddToCartButton product={product} />
+            </div>
+          ) : (
+            <button
+              className="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed"
+              disabled
+            >
+              Out of Stock
+            </button>
           )}
         </div>
+
         {product?.discount > 0 && (
           <p className="text-xs lg:text-sm text-gray-500 lg:mt-2 ">
-            You save Rs {discountAmount.toFixed(0)}
+            You save Rs.{discountAmount.toFixed(0)}
           </p>
         )}
       </div>
@@ -84,63 +103,41 @@ const ProductDisplay = () => {
             </>
           )}
         </div>
-
-        {product?.stock > 0 && (
-          <div className="flex items-center gap-4">
-            <span className="font-medium text-gray-700">Quantity:</span>
-            <div className="flex items-center border rounded-lg">
-              <button
-                onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-3 py-2 border-r hover:bg-gray-50 transition-colors"
-                disabled={quantity === 1}
-              >
-                <Minus className="w-4 h-4" />
-              </button>
-              <span className="px-4 w-12 text-center">{quantity}</span>
-              <button
-                onClick={() => setQuantity(quantity + 1)}
-                className="px-3 py-2 border-l hover:bg-gray-50 transition-colors"
-                disabled={quantity >= product?.stock}
-              >
-                <Plus className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
       </div>
-
-      {/* Add to Cart Button */}
-      {product?.stock > 0 ? (
-        <button className="w-full bg-green-600 text-white py-3 rounded-lg font-medium hover:bg-green-700 transition-colors mb-6">
-          Add to Cart ({quantity})
-        </button>
-      ) : (
-        <button
-          className="w-full bg-gray-400 text-white py-3 rounded-lg font-medium cursor-not-allowed"
-          disabled
-        >
-          Out of Stock
-        </button>
-      )}
 
       {/* Delivery & Policies */}
+      <div className="bg-white py-2">
+      <h2 className="text-xl font-bold mb-4">Why shop from HamroPasal?</h2>
       <div className="space-y-4">
-        <div className="p-4 bg-green-50 rounded-lg flex items-start">
-          <Truck className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-          <span className="ml-2 text-sm text-gray-700">
-            Delivery within 15 mins
-          </span>
+        {/* <div className="flex items-start space-x-4">
+          <Rocket className="w-6 h-6 text-blue-500 flex-shrink-0 mt-4" />
+          <div>
+            <h3 className="text-lg font-semibold">Superfast Delivery</h3>
+            <p className="text-gray-600">
+              Get your order delivered to your doorstep at the earliest from dark stores near you.
+            </p>
+          </div>
+        </div> */}
+        <div className="flex items-start space-x-4">
+          <Tag className="w-6 h-6 text-green-500 flex-shrink-0 mt-4" />
+          <div>
+            <h3 className="text-lg font-semibold">Best Prices & Offers</h3>
+            <p className="text-gray-600">
+              Best price destination with offers directly from the manufacturers.
+            </p>
+          </div>
         </div>
-
-        <div className="p-4 bg-blue-50 rounded-lg">
-          <div className="flex items-start">
-            <Tag className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <span className="ml-2 text-sm text-gray-700">
-              Best price guaranteed
-            </span>
+        <div className="flex items-start space-x-4 mt-4">
+          <ShoppingCart className="w-6 h-6 text-purple-500 flex-shrink-0" />
+          <div>
+            <h3 className="text-lg font-semibold">Wide Assortment</h3>
+            <p className="text-gray-600">
+              Choose from different products across food, personal care, household & other categories.
+            </p>
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 
@@ -254,6 +251,7 @@ const ProductDisplay = () => {
         </div>
       </div>
 
+      <Footer />
     </div>
   );
 };

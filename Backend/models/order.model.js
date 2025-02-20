@@ -2,50 +2,60 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
+    orderId: {
+      type: String,
+      unique: true,
+      default: function () {
+        return `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      },
+    },
+    transactionId: {
+      type: String,
+      default: function () {
+        return `COD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+      },
+    },
+
     userId: {
       type: mongoose.Schema.ObjectId,
       ref: "user",
     },
-    orderId: {
-      type: string,
-      required: [true, "Provide orderId"],
-      unique: true,
+    orderItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product", // Reference to Product model
+          required: true,
+        },
+        name: { type: String, required: true },
+        qty: { type: Number, required: true },
+        price: { type: Number, required: true },
+        image: { type: String, required: true },
+        discount: { type: Number },
+      },
+    ],
+    paymentMethod: {
+      type: String,
+      required: true,
     },
-    productId: {
-      type: mongoose.Schema.ObjectId,
-      ref: "product",
+    order_status: {
+      type: String,
+      required: true,
+      default: "Order Processing",
+      enum: ["Order Processing", "Shipped", "Delivered", "Cancelled"],
     },
-    productDetail: {
-      _id: string,
-      name: String,
-      image: Array,
-    },
-    payment_id: {
-      type: string,
-      default: "",
-    },
-    payment_status: {
-      type: string,
-      default: "",
-    },
-    delivery_address: {
+    shippingAddress: {
       type: mongoose.Schema.ObjectId,
       ref: "address",
+      required: true,
     },
-    subTotalAmount: {
+    totalPrice: {
       type: Number,
+      required: true,
       default: 0,
-    },
-    totalAmount: {
-      type: Number,
-      default: 0,
-    },
-    invoice_receive: {
-      type: String,
-      default: "",
     },
   },
   { timestamps: true }
 );
 
-export const orderModel = mongoose.model("order",orderSchema)
+export const orderModel = mongoose.model("order", orderSchema);

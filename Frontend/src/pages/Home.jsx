@@ -1,134 +1,171 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import panBanner from '../assets/pan.jpg'
-import CategorySkeleton from '../components/CategorySkeleton'
-import { useCategoryStore } from '../Admin/Stores/useCategoryStore'
+import React, { useCallback, useState, useMemo, memo } from 'react';
+import panBanner from '../assets/pan.avif';
+import CategorySkeleton from '../components/CategorySkeleton';
+import { useCategoryStore } from '../Admin/Stores/useCategoryStore';
 import { useSubCategoryStore } from '../Admin/Stores/useSubCategoryStore';
-import CategoryWiseProduct from '../components/CategoryWiseProduct';
 import { useNavigate } from 'react-router-dom';
 import { banner } from '../utils/banner';
-import cigratte from '../assets/cigratte.webp'
-import InfiniteScroll from 'react-infinite-scroll-component'
+import cigratte from '../assets/cigratte.avif';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import { Loader } from '@mantine/core';
 
+const CategoryWiseProduct = React.lazy(() => import('../components/CategoryWiseProduct'));
+
+// WebP versions of images
+const optimizedBanner = banner.map(b => ({
+  ...b,
+  image: b.image.replace(/\.(png|jpg)$/, '.webp')
+}));
 
 function sanitizeName(name) {
-  return name
-    .trim()
-    .replace(/[^a-zA-Z0-9_\/.]/g, '');
+  return name.trim().replace(/[^a-zA-Z0-9_\/.]/g, '');
 }
+
+const CategoryItem = memo(({ category, onClick }) => (
+  <div onClick={onClick}>
+    <img
+      src={category.imageWebp || category.image}
+      alt={category.name}
+      loading="lazy"
+      width={100}
+      height={100}
+      className="w-full h-full cursor-pointer object-contain"
+    />
+  </div>
+));
 
 function Home() {
   const { isFetchingCategory, categories } = useCategoryStore();
-  const { subCategories } = useSubCategoryStore()
-  const navigate = useNavigate()
-  const [visibleCount, setVisibleCount] = useState(8)
+  const { subCategories } = useSubCategoryStore();
+  const navigate = useNavigate();
+  const [visibleCount, setVisibleCount] = useState(6);
+  const subCategoryMap = useMemo(() => {
+    const map = new Map();
+    subCategories.forEach(sub => {
+      sub.category.forEach(catId => {
+        map.set(catId, sub);
+      });
+    });
+    return map;
+  }, [subCategories]);
 
   const handleRedirectProductPage = useCallback((id, name) => {
-    const subcategory = subCategories.find(sub =>
-      sub.category.some(c => c === id)
-    )
+    const subcategory = subCategoryMap.get(id);
     if (subcategory) {
-      navigate(`/${sanitizeName(name)}/${id}/${sanitizeName(subcategory.name)}/${subcategory._id}`);
+      navigate(
+        `/${sanitizeName(name)}/${id}/${sanitizeName(subcategory.name)}/${subcategory._id}`
+      );
     }
-  }, [subCategories, navigate]);
+  }, [subCategoryMap, navigate]);
 
+  const loadMore = useCallback(() => {
+    setVisibleCount(prev => Math.min(prev + 6, categories.length));
+  }, [categories.length]);
+
+  const memoizedCategories = useMemo(
+    () => categories.slice(0, visibleCount),
+    [categories, visibleCount]
+  );
+
+  const optimizedCategories = useMemo(
+    () => categories.map(c => ({
+      ...c,
+      imageWebp: c.image.replace(/\.(png|jpg)$/, '.webp')
+    })),
+    [categories]
+  );
 
   return (
-    <section className='lg:px-24 px-1'>
-      <div className='container mx-auto'>
-        <div className={`w-full rounded hidden lg:block`}
-          onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae", "paan corner")}
+    <section className="lg:px-24 px-1">
+      <div className="container mx-auto">
+        <div className="w-full rounded hidden lg:block" 
+        onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
         >
           <img
             srcSet={panBanner}
-            className='w-full'
-            alt='banner'
+            className="w-full h-full"
+            alt="banner"
+            loading="eager"
           />
         </div>
-        <div className='ml-9 grid-cols-3 mb-3 hidden lg:grid'>
-          {banner.map((e, index) => {
-            return (
-              <div
-                key={index}
-                onClick={() => handleRedirectProductPage(e.id, e.name)}
-              >
-                <img
-                  srcSet={e.image}
-                  className='w-96 object-contain'
-                  alt='banner'
-                />
-              </div>
-            )
-          })}
+
+        <div className="ml-9 grid-cols-3 mb-3 hidden lg:grid">
+          {optimizedBanner.map((e, index) => (
+            <div key={index} onClick={() => handleRedirectProductPage(e.id, e.name)}>
+              <img
+                srcSet={e.image}
+                className="w-96 object-contain h-full"
+                alt="banner"
+                loading="lazy"
+                width={384}
+                height={200}
+              />
+            </div>
+          ))}
         </div>
 
-        {/* Mobile Banner  */}
-        <div className={`w-full rounded lg:hidden mb-3 p-2`}
-          onClick={() => handleRedirectProductPage("66dffd311e92f6b41280b7ae", "paan corner")}
+        {/* Mobile Banner */}
+        <div className="w-full rounded lg:hidden mb-3 p-2"
+         onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
         >
           <img
             srcSet={cigratte}
-            className='w-full'
-            alt='banner'
+            className="w-full"
+            alt="banner"
+            loading="eager"
+            width={400}
+            height={200}
           />
         </div>
       </div>
 
       <div className="max-w-screen mx-auto lg:p-2">
-        <div className='lg:hidden px-2 py-1 text-sm font-bold'>Shop By Category</div>
+        <div className="lg:hidden px-2 py-1 text-sm font-bold">
+          Shop By Category
+        </div>
         <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-          {
-            isFetchingCategory ?
-              (<CategorySkeleton />)
-              :
-              (
-                categories.map((category, index) => {
-                  return (
-                    <div key={index} onClick={() => handleRedirectProductPage(category._id, category.name)}>
-                      <div className=''>
-                        <img
-                          src={category.image}
-                          alt={category.name}
-                          loading='lazy'
-                          className='w-full h-full cursor-pointer object-contain'
-                        />
-                      </div>
-                    </div>
-                  )
-                })
-              )
-
-          }
+          {isFetchingCategory ? (
+            <CategorySkeleton />
+          ) : (
+            optimizedCategories.map((category) => (
+              <CategoryItem
+                key={category._id}
+                category={category}
+                onClick={() =>
+                  handleRedirectProductPage(category._id, category.name)
+                }
+              />
+            ))
+          )}
         </div>
       </div>
-      {/* <InfiniteScroll
-        dataLength={20} //This is important field to render the next data
-        next={loadMoreProducts}
-        hasMore={true}
-        loader={<h4>Loading...</h4>}
+
+      <InfiniteScroll
+        dataLength={visibleCount}
+        next={loadMore}
+        hasMore={visibleCount < categories.length}
+        loader={
+          <div className="flex justify-center items-center py-32">
+            <Loader color="green" size={30} />
+          </div>
+        }
       >
-      </InfiniteScroll> */}
-      {categories?.slice(0, visibleCount).map((category, index) => (
-        <CategoryWiseProduct
-          key={category?._id + "CategorywiseProduct"}
-          id={category?._id}
-          name={category?.name}
-        />
-      ))}
-
-      {visibleCount < categories.length && (
-        <div className="text-center mt-4">
-          <button
-            onClick={() => setVisibleCount((prev) => prev + 6)}
-            className=" text-green-500 mb-4"
-          >
-            Load More
-          </button>
+        <div className="overflow-hidden">
+          {memoizedCategories.map((category) => (
+            <React.Suspense
+              key={category._id}
+              fallback={<div className="h-96" />} // Use empty placeholder
+            >
+              <CategoryWiseProduct
+                id={category._id}
+                name={category.name}
+              />
+            </React.Suspense>
+          ))}
         </div>
-      )}
-
-
+      </InfiniteScroll>
     </section>
-  )
+  );
 }
 
-export default Home
+export default memo(Home);

@@ -116,7 +116,7 @@ export const Login = async (req, res) => {
     const refreshToken = await generateRefreshToken(user._id);
 
     res.cookie("accessToken", accessToken, {
-      maxAge: 10 * 60 * 1000,
+      maxAge: 20 * 60 * 1000,
       ...cookieOption,
     });
     res.cookie("refreshToken", refreshToken, {
@@ -207,7 +207,7 @@ export const UpdateUserDetail = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Update Successful", user: updateUser,success: true });
+      .json({ message: "Update Successful", user: updateUser, success: true });
   } catch (error) {
     console.log("Error in updateUserDetail controller: ", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -391,6 +391,28 @@ export const getProfile = async (req, res) => {
     return res.status(200).json({ user: req.user });
   } catch (error) {
     console.log("Error in check auth controller: ", error.message);
+    res
+      .status(500)
+      .json({ message: "Internal Server error", error: error.message });
+  }
+};
+export const getAllUser = async (req, res) => {
+  try {
+    const User = await UserModel.find();
+    if (!User) {
+      return res
+        .status(500)
+        .json({ message: "All User fetch Failed ", success: false });
+    }
+    return res
+      .status(200)
+      .json({
+        message: "All User fetched Successfully",
+        success: true,
+        User: User,
+      });
+  } catch (error) {
+    console.log("Error in get all user controller: ", error.message);
     res
       .status(500)
       .json({ message: "Internal Server error", error: error.message });

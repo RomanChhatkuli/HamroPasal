@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      defaut: "",
+      default: "",
     },
     mobile: {
       type: Number,

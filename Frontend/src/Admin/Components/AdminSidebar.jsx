@@ -1,12 +1,13 @@
 import React, { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { LayoutDashboard, Layers, Grid3X3, Package, CloudUpload, Menu, X } from "lucide-react"
+import { LayoutDashboard, Layers, Grid3X3,ShoppingBag, Package, CloudUpload, Menu, X } from "lucide-react"
 import useMobile from "../../Hooks/useMobile"
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
   { icon: Layers, label: "Categories", path: "/admin/category" },
   { icon: Grid3X3, label: "Subcategories", path: "/admin/sub-category" },
+  { icon: ShoppingBag, label: "Orders", path: "/admin/order" },
   { icon: Package, label: "Products", path: "/admin/products" },
   { icon: CloudUpload, label: "Upload Product", path: "/admin/upload-product" },
 ]

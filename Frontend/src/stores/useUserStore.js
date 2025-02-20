@@ -1,8 +1,10 @@
 import { create } from "zustand";
 import toast from "react-hot-toast";
 import Axios from "../utils/Axios";
+import { persist } from "zustand/middleware";
 
-export const useUserStore = create((set, get) => ({
+export const useUserStore = create(
+  persist((set, get) => ({
   user: null,
   loading: false,
   checkingAuth: false,
@@ -15,6 +17,11 @@ export const useUserStore = create((set, get) => ({
   isResetPassword: false,
   isMenu: false,
   isMobileMenu: false,
+  adminUser: [],
+
+  setAdminUser: (data) =>{
+    set({adminUser: data})
+  },
 
   setIsMobileMenu: () =>
     set((state) => ({
@@ -52,7 +59,6 @@ export const useUserStore = create((set, get) => ({
     set({ loading: true });
     try {
       const response = await Axios.post("/auth/signup", formData);
-      set({ user: response.data.user });
       if (response.data.success === true) {
         toast.success("Account Created Successfully");
         get().setIsSignup(false);
@@ -106,9 +112,8 @@ export const useUserStore = create((set, get) => ({
     set({ checkingAuth: true });
     try {
       const response = await Axios.get("/auth/profile");
-      set({ user: response.data.user, checkingAuth: false });
+      set({ user: response.data.user});
     } catch (error) {
-      //   console.log(error);
       set({ user: null });
     } finally {
       set({ checkingAuth: false });
@@ -239,4 +244,24 @@ export const useUserStore = create((set, get) => ({
       set({ loading: false });
     }
   },
-}));
+  getAdminUser: async () =>{
+    try {
+      const response = await Axios.get("/auth/allUser");
+      if (response.data.success === true) {
+        get().setAdminUser(response?.data?.User);
+      } else {
+        toast.error(response?.data?.message);
+      }
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message ||
+          "An error occurred during get admin user"
+      );
+    }
+  }
+}),{
+  name: "user", // Key in localStorage
+  partialize: (state) => ({ user: state.user }),
+}
+  )
+);

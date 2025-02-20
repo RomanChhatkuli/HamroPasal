@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema(
   {
+    recipient_name: {
+      type: String,
+      default: "",
+    },
     address_line: {
       type: String,
       default: "",
@@ -10,7 +14,15 @@ const addressSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    state: {
+    province: {
+      type: String,
+      default: "",
+    },
+    localPlace: {
+      type: String,
+      default: "",
+    },
+    district: {
       type: String,
       default: "",
     },
@@ -18,9 +30,9 @@ const addressSchema = new mongoose.Schema(
       type: Number,
       default: null,
     },
-    status: {
-      type: Boolean,
-      default: true
+    userId: {
+      type: mongoose.Schema.ObjectId,
+      default: ''
     }
   },
   { timestamps: true }

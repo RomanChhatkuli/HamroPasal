@@ -8,6 +8,9 @@ import authRouter from './routes/auth.route.js';
 import categoryRouter from './routes/category.route.js'
 import subCategoryRouter from './routes/subCategory.route.js'
 import productRouter from './routes/products.route.js'
+import addressRouter from './routes/address.route.js'
+import paymentRouter from './routes/payment.route.js'
+import orderRouter from './routes/order.route.js'
 
 const app = express();
 const PORT = process.env.PORT || 8080
@@ -29,7 +32,9 @@ app.use("/api/auth", authRouter)
 app.use("/api/category", categoryRouter)
 app.use("/api/sub-category", subCategoryRouter)
 app.use("/api/product", productRouter)
-
+app.use("/api/address", addressRouter)
+app.use("/api/payment", paymentRouter)
+app.use("/api/order", orderRouter)
 
 app.listen(PORT,() =>{
     console.log(`Listening to http://localhost:${PORT}/`)

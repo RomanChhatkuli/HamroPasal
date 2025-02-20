@@ -6,9 +6,9 @@ import Router from './Router.jsx'
 
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <BrowserRouter>
       <Router />
     </BrowserRouter>
-  </StrictMode>,
+  // </StrictMode>,
 )

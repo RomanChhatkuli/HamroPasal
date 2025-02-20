@@ -11,10 +11,13 @@
   },
   "dependencies": {
     "@mantine/core": "^7.16.3",
+    "@mantine/form": "^7.16.3",
     "@mantine/hooks": "^7.16.3",
     "@mantine/modals": "^7.16.3",
     "@tanstack/react-table": "^8.20.6",
     "axios": "^1.7.9",
+    "crypto-js": "^4.2.0",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.471.1",
     "react": "^18.3.1",
     "react-content-loader": "^7.0.2",

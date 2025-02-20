@@ -1,5 +1,5 @@
 import express from "express";
-import { ForgetPassword, getProfile, Login, Logout, RefreshToken, ResetPassword, Signup, UpdateUserDetail, UploadAvatar, VerifyEmail, VerifyForgotPasswordOTP } from "../controllers/auth.controller.js";
+import { ForgetPassword, getAllUser, getProfile, Login, Logout, RefreshToken, ResetPassword, Signup, UpdateUserDetail, UploadAvatar, VerifyEmail, VerifyForgotPasswordOTP } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middlewares/auth.middleware.js";
 import upload from "../middlewares/multer.js";
 const authRouter = express.Router()
@@ -15,5 +15,6 @@ authRouter.post('/verify-forget-password-otp',VerifyForgotPasswordOTP)
 authRouter.post('/reset-password',ResetPassword)
 authRouter.post('/refresh-token',RefreshToken)
 authRouter.get('/profile',protectRoute,getProfile)
+authRouter.get('/allUser',protectRoute,getAllUser)
 
 export default authRouter;

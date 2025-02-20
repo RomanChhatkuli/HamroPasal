@@ -5,6 +5,7 @@ import {
     LogOut,
     Menu,
     X,
+    MapPinHouse,
     UserRoundCog
 } from 'lucide-react';
 import { useUserStore } from '../stores/useUserStore.js';
@@ -88,10 +89,23 @@ function MobileAccountMenu() {
                             }}
                         >
                             <UserRoundCog className="w-6 h-6 text-gray-600" />
-                            <span className="text-gray-700 text-lg font-medium">Admin Panel</span>
+                            <span className="text-gray-700 text-lg font-medium">Admin Panel   {user.role == "ADMIN" && <span className='text-red-500'>(admin)</span>}</span>
+
                         </Link>
 
                         {/* My Orders */}
+                        <Link
+                            className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors text-left"
+                            onClick={() => {
+                                setIsMobileMenu();
+                                // Handle "My Orders" action
+                            }}
+                            to={'/dashboard/address'}
+                        >
+                            <MapPinHouse className="w-6 h-6 text-gray-600" />
+                            <span className="text-gray-700 text-lg font-medium">My Address</span>
+                        </Link>
+
                         <Link
                             className="w-full flex items-center gap-4 p-4 hover:bg-gray-50 rounded-xl transition-colors text-left"
                             onClick={() => {

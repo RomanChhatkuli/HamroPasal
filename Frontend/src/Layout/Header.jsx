@@ -11,10 +11,17 @@ import ResetPassword from '../pages/ResetPassword.jsx';
 import AccountMenu from '../components/AccountMenu.jsx';
 import MobileAccountMenu from '../components/MobileAccountMenu.jsx';
 import { useProductStore } from '../Admin/Stores/useProductStore.js';
+import CartDrawer from '../components/CartDrawer.jsx';
+import { useDisclosure } from '@mantine/hooks';
+import { useCartStore } from '../stores/useCartStore.js';
+import { totalPriceWithDiscount } from '../utils/CartProductPrice.js';
+import MobileCart from '../components/MobileCart.jsx';
 
 function Header() {
   const { isLogin, isOTP, setIsLogin, isMenu, setIsMenu, isMobileMenu, setIsMobileMenu, isSignup, isForgotPassword, isResetPassword, user } = useUserStore();
   const { setInputValue } = useProductStore();
+  const { cartProducts } = useCartStore()
+  const [opened, { open, close }] = useDisclosure(false);
 
   const [isMobile] = useMobile()
   const location = useLocation()
@@ -26,12 +33,12 @@ function Header() {
     <header className='bg-white lg:h-[80px] mt-2 lg:mt-1 lg:shadow-md sticky top-0 flex items-center mb-1 flex-col z-50 '>
       {!(isMobile && isSearchPage) && (
         <div className='container flex items-center h-full justify-between pr-2 mx-auto mb-1'>
-          <div 
-          onClick={() =>{
-            setInputValue('')
-            navigate('/')
-          }} 
-          className='flex text-2xl lg:text-3xl lg:items-center ml-4 cursor-pointer'>
+          <div
+            onClick={() => {
+              setInputValue('')
+              navigate('/')
+            }}
+            className='flex text-2xl lg:text-3xl lg:items-center ml-4 cursor-pointer'>
             <p className='blue-gradient_text font-bold'>Hamro</p>
             <p className='text-yellow-500 font-semibold'>Pasal</p>
           </div>
@@ -71,15 +78,25 @@ function Header() {
                 )}
 
 
-                <button className='flex justify-center items-center gap-2 bg-green-700 h-14 p-3 rounded-lg'>
+                <button
+                  onClick={() => open()}
+                  className='flex justify-center items-center gap-2 bg-[#318616] h-14 w-28 rounded-lg'
+                >
                   <div>
                     <ShoppingCart className='text-white animate-bounce' />
                   </div>
 
-                  <div className='font-medium text-white flex flex-col justify-center items-center p-2'>
-                    <p className='font-semibold'> My Cart</p>
-                    {/* <p>1 Items</p>
-                    <p>Rs 500</p> */}
+                  <div
+                    className='text-sm font-semibold text-white flex flex-col justify-center items-center'
+                  >
+                    {cartProducts.length ?
+                      <div>
+                        <p>{cartProducts.length} Items</p>
+                        <p>Rs.{totalPriceWithDiscount(cartProducts)}</p>
+                      </div>
+                      :
+                      <p className='font-semibold'> My Cart</p>
+                    }
                   </div>
                 </button>
 
@@ -91,7 +108,7 @@ function Header() {
       )}
 
       {(location.pathname === '/search' || location.pathname === '/') &&
-        <div className={`lg:hidden mb-2 mt-2`}>
+        <div className={`lg:hidden mb-2 mt-2 scale-x-[1.2] scale-y-110`}>
           <SearchBar />
         </div>
       }
@@ -101,6 +118,12 @@ function Header() {
       {isOTP && <OTPVerication />}
       {isResetPassword && <ResetPassword />}
       {isMobileMenu && <MobileAccountMenu />}
+      <CartDrawer opened={opened} close={close} />
+      {(cartProducts.length > 0 && location.pathname != '/checkout') &&
+        <div onClick={open} >
+          <MobileCart />
+        </div>
+      }
 
     </header>
   )

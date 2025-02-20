@@ -44,10 +44,8 @@ export const useSubCategoryStore = create(
     
       addSubCategory: async (data) => {
         try {
-          console.log(data)
           set({ loading: true });
           const response = await Axios.post("/sub-category/add-subCategory", data);
-          console.log(response)
           if (response.data.success) {
             toast.success(response.data.message); 
             get().fetchSubCategory()
