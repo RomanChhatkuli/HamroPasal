@@ -5,9 +5,11 @@ import { locationData } from '../utils/location.js';
 import useMobile from "../Hooks/useMobile.jsx"
 import toast from 'react-hot-toast';
 import { useAddressStore } from '../stores/useAddressStore.js';
+import { useLocation } from 'react-router-dom';
 
 const AddressPage = ({selectedAddress, setSelectedAddress}) => {
     const { Address, getAddress, addAddress, editAddress, deleteAddress } = useAddressStore();
+    const location = useLocation()
 
     const [modalOpened, setModalOpened] = useState(false);
     const [confirmModalOpened, setConfirmModalOpened] = useState(false);
@@ -144,13 +146,13 @@ const handleModalClose = () => {
         </div>
     );
 
-    return (
+    return (       
         <div>
-            <div className="bg-white shadow-sm rounded-lg p-2 lg:p-4 border">
+            <div className={`bg-white shadow-sm rounded-lg p-2 lg:p-4 border lg:h-[78vh] mb-2 mt-2 ${location.pathname == "/dashboard/address" && 'h-[78vh]'}`}>
                 <div className="flex justify-between items-center mb-3 lg:mb-6">
                     <h2 className="text-lg lg:text-2xl font-semibold">Delivery Address</h2>
                     <button
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs lg:text-sm px-2 lg:px-4 py-2 rounded-md flex items-center lg:gap-2"
+                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs lg:text-sm px-3 lg:px-4 py-3 rounded-md flex items-center lg:gap-2"
                         onClick={() => setModalOpened(true)}
                     >
                         <Plus size={15} />

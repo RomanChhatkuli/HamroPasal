@@ -11,7 +11,6 @@ import { Loader } from '@mantine/core';
 
 const CategoryWiseProduct = React.lazy(() => import('../components/CategoryWiseProduct'));
 
-// WebP versions of images
 const optimizedBanner = banner.map(b => ({
   ...b,
   image: b.image.replace(/\.(png|jpg)$/, '.webp')
@@ -78,8 +77,8 @@ function Home() {
   return (
     <section className="lg:px-24 px-1">
       <div className="container mx-auto">
-        <div className="w-full rounded hidden lg:block" 
-        onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
+        <div className="w-full rounded hidden lg:block"
+          onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
         >
           <img
             srcSet={panBanner}
@@ -106,7 +105,7 @@ function Home() {
 
         {/* Mobile Banner */}
         <div className="w-full rounded lg:hidden mb-3 p-2"
-         onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
+          onClick={() => navigate('/paancorner/66dffd311e92f6b41280b7ae/SmokingCessation/66e2b223cd76006eff5dbcb9')}
         >
           <img
             srcSet={cigratte}
@@ -123,11 +122,13 @@ function Home() {
         <div className="lg:hidden px-2 py-1 text-sm font-bold">
           Shop By Category
         </div>
-        <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
-          {isFetchingCategory ? (
+        {isFetchingCategory ? (
+          <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-6">
             <CategorySkeleton />
-          ) : (
-            optimizedCategories.map((category) => (
+          </div>
+        ) : (
+          <div className="grid grid-cols-4 lg:gap-2 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10">
+            {optimizedCategories.map((category) => (
               <CategoryItem
                 key={category._id}
                 category={category}
@@ -135,9 +136,9 @@ function Home() {
                   handleRedirectProductPage(category._id, category.name)
                 }
               />
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <InfiniteScroll

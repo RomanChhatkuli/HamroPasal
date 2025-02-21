@@ -13,8 +13,8 @@ import OTPEmailTemplate from "../utils/OTPEmailTemplate.js";
 
 const cookieOption = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  secure: true,
+  sameSite: "None",
 };
 
 export const Signup = async (req, res) => {

@@ -48,7 +48,7 @@ function Profile() {
     };
     
     return (
-        <form className="max-w-3xl" onSubmit={handleFormSubmit}>
+        <form className="max-w-3xl h-[80vh] mt-2" onSubmit={handleFormSubmit}>
 
             <div className="bg-white rounded-2xl shadow-sm p-4 mb-2">
                 <h2 className="text-lg font-semibold mb-2">Profile Picture</h2>
@@ -77,7 +77,7 @@ function Profile() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-2xl shadow-sm p-5 space-y-6" >
+            <div className="bg-white rounded-2xl shadow-sm p-5 space-y-6 mt-4" >
                 <h2 className="text-lg font-semibold">Personal Information</h2>
 
                 <div className="space-y-4">

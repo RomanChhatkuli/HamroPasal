@@ -71,8 +71,9 @@ function CheckoutPage() {
             <Container size="lg">
                 <Grid gutter="xl">
                     <Grid.Col span={{ base: 12, md: 8 }}>
+                        <div className=''>
                         <AddressPage selectedAddress={selectedAddress} setSelectedAddress={setSelectedAddress} />
-
+                        </div>
                     </Grid.Col>
 
                     {/* Bill Details  */}
