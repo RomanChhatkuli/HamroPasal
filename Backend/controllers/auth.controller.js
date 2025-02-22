@@ -16,6 +16,7 @@ const cookieOption = {
   httpOnly: true,
   secure: true,
   sameSite: "None",
+  path: "/"
 };
 
 // const cookieOption = {
