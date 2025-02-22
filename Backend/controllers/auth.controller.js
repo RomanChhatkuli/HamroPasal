@@ -11,11 +11,18 @@ import uploadImage from "../utils/uploadImageCloudinary.js";
 import generateOTP from "../utils/generateOTP.js";
 import OTPEmailTemplate from "../utils/OTPEmailTemplate.js";
 
+// During hosting use this 
 const cookieOption = {
   httpOnly: true,
   secure: true,
   sameSite: "None",
 };
+
+// const cookieOption = {
+//   httpOnly: true,
+//   secure: process.env.NODE_ENV === "production",
+//   sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+// };
 
 export const Signup = async (req, res) => {
   const { name, email, password } = req.body;
