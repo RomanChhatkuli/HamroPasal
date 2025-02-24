@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Rocket, Tag, ShoppingCart, ChevronLeft, CheckCircle, AlertCircle, Search } from 'lucide-react';
+import { Rocket, Tag, ShoppingCart, ChevronLeft, CheckCircle, AlertCircle, Search, Loader2 } from 'lucide-react';
 import { useParams, Link } from 'react-router-dom';
 import { useProductStore } from '../Admin/Stores/useProductStore';
 import Header from '../Layout/Header';
@@ -8,7 +8,7 @@ import AddToCartButton from '../components/AddToCartButton';
 
 const ProductDisplay = () => {
   const [selectedImage, setSelectedImage] = useState(0);
-  const { fetchProductDetail } = useProductStore();
+  const { fetchProductDetail, isFetchingProductDetails } = useProductStore();
   const [product, setProduct] = useState({
     name: '',
     image: [],
@@ -107,9 +107,9 @@ const ProductDisplay = () => {
 
       {/* Delivery & Policies */}
       <div className="bg-white py-2">
-      <h2 className="text-xl font-bold mb-4">Why shop from HamroPasal?</h2>
-      <div className="space-y-4">
-        {/* <div className="flex items-start space-x-4">
+        <h2 className="text-xl font-bold mb-4">Why shop from HamroPasal?</h2>
+        <div className="space-y-4">
+          <div className="flex items-start space-x-4">
           <Rocket className="w-6 h-6 text-blue-500 flex-shrink-0 mt-4" />
           <div>
             <h3 className="text-lg font-semibold">Superfast Delivery</h3>
@@ -117,27 +117,27 @@ const ProductDisplay = () => {
               Get your order delivered to your doorstep at the earliest from dark stores near you.
             </p>
           </div>
-        </div> */}
-        <div className="flex items-start space-x-4">
-          <Tag className="w-6 h-6 text-green-500 flex-shrink-0 mt-4" />
-          <div>
-            <h3 className="text-lg font-semibold">Best Prices & Offers</h3>
-            <p className="text-gray-600">
-              Best price destination with offers directly from the manufacturers.
-            </p>
-          </div>
         </div>
-        <div className="flex items-start space-x-4 mt-4">
-          <ShoppingCart className="w-6 h-6 text-purple-500 flex-shrink-0" />
-          <div>
-            <h3 className="text-lg font-semibold">Wide Assortment</h3>
-            <p className="text-gray-600">
-              Choose from different products across food, personal care, household & other categories.
-            </p>
+          <div className="flex items-start space-x-4">
+            <Tag className="w-6 h-6 text-green-500 flex-shrink-0 mt-4" />
+            <div>
+              <h3 className="text-lg font-semibold">Best Prices & Offers</h3>
+              <p className="text-gray-600">
+                Best price destination with offers directly from the manufacturers.
+              </p>
+            </div>
+          </div>
+          <div className="flex items-start space-x-4 mt-4">
+            <ShoppingCart className="w-6 h-6 text-purple-500 flex-shrink-0" />
+            <div>
+              <h3 className="text-lg font-semibold">Wide Assortment</h3>
+              <p className="text-gray-600">
+                Choose from different products across food, personal care, household & other categories.
+              </p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 
@@ -160,6 +160,13 @@ const ProductDisplay = () => {
           <Search className="w-6 h-6" />
         </Link>
       </div>
+
+      {
+        isFetchingProductDetails &&
+         <div className="w-[100vw] h-[100vh] flex justify-center items-center">
+          <Loader2 size={35} className='text-yellow-500 animate-spin' />
+        </div>
+      }
 
       <div className="max-w-7xl mx-auto p-2 mt-2 lg:mt-24">
         <div className="flex flex-col lg:flex-row gap-8">
