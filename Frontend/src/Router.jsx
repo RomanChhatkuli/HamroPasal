@@ -24,6 +24,7 @@ import AddressPage from './components/AddressPage.jsx'
 import PaymentStatusPage from './pages/PaymentStatusPage.jsx'
 import AdminOrders from './Admin/Pages/AdminOrders.jsx'
 import Unauthorized from './pages/Unauthorized.jsx'
+import LoadingScreen from './components/LoadingScreen.jsx'
 
 function Router() {
   const { user, checkAuth, checkingAuth } = useUserStore();
@@ -33,9 +34,7 @@ function Router() {
   }, [checkAuth]);
 
   if (checkingAuth) return (
-    <div className="w-[100vw] h-[100vh] flex justify-center items-center">
-      <Loader2 size={35} className='text-yellow-500 animate-spin' />
-    </div>
+    <LoadingScreen />
   )
   return (
     <MantineProvider withGlobalStyles withNormalizeCSS>

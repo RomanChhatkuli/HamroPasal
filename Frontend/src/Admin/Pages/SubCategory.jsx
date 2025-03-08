@@ -182,7 +182,7 @@ function SubCategory() {
                     SN
                   </div>
                 </th>
-                <th className="px-16 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
+                <th className="px-3 lg:px-16 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-16">
                   Image
                 </th>
                 <th
@@ -211,7 +211,7 @@ function SubCategory() {
                     {index + 1}
                   </td>
                   <td className=" whitespace-nowrap">
-                    <div className='w-40 h-20'>
+                    <div className='w-16 lg:w-40 h-20'>
 
                       <img
                         src={subcategory.image}
@@ -220,7 +220,7 @@ function SubCategory() {
                       />
                     </div>
                   </td>
-                  <td className="px-6 py-4 w-80 whitespace-nowrap">
+                  <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">
                       {subcategory.name}
                     </div>
@@ -237,7 +237,7 @@ function SubCategory() {
                       })}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-6 py-4 text-right text-sm font-medium">
                     <button
                       onClick={() => handleEdit(subcategory)}
                       className="text-blue-600 hover:text-blue-900 mr-3"

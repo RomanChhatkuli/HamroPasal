@@ -134,7 +134,7 @@ function Order() {
         getOrders();
     }, [])
     return (
-        <div className="max-w-6xl min-h-[78vh] bg-gray-50 mt-2 lg:p-5 rounded-lg">
+        <div className="max-w-6xl min-h-[78vh] bg-gray-50 mt-2 p-2 lg:p-5 rounded-lg">
             <h1 className="text-xl font-semibold text-gray-900 mb-4">My Orders</h1>
             <div className="  flex flex-col gap-3 pr-2">
                 {Orders.map((order) => (

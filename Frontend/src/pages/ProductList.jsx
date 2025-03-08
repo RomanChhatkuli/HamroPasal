@@ -130,7 +130,7 @@ function ProductList() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto h-[83.5vh] lg:h-[75vh]">
+      <main className="max-w-7xl mx-auto h-[89vh] lg:h-[75vh]">
         <div className="flex gap-[85px] lg:gap-14 ">
           {/* Sidebar */}
           <div className="lg:w-64 flex-shrink-0 ">
