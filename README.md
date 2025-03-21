@@ -1,8 +1,7 @@
 # HamroPasal - E-Commerce Platform
-
-![HamroPasal Logo](https://via.placeholder.com/150) <!-- Replace with your logo URL -->
-
 HamroPasal is a fully functional e-commerce platform designed to provide a seamless online shopping experience. Built with modern web technologies, this project ensures scalability, performance, and ease of use for both customers and administrators.
+
+![HamroPasal Logo](./Demo%20Image/Home.png) <!-- Replace with your logo URL -->
 
 ## Features
 
@@ -16,6 +15,15 @@ HamroPasal is a fully functional e-commerce platform designed to provide a seaml
 - **Email Notifications**: Integrated with Resend for email notifications.
 - **State Management**: Zustand for efficient state management in the frontend.
 - **Infinite Scrolling**: Enhanced user experience with infinite scrolling for product listings.
+
+## Demo
+
+Check out the live demo of HamroPasal: [Live Demo]((https://hamropasal-1.onrender.com)) 
+
+![HamroPasal Screenshot](./Demo%20Image/Cart.png)
+![HamroPasal Screenshot](./Demo%20Image/Product.png)
+![HamroPasal Screenshot](./Demo%20Image/Checkout.png)
+![HamroPasal Screenshot](./Demo%20Image/Mobile.png)
 
 ## Technologies Used
 
@@ -42,12 +50,6 @@ HamroPasal is a fully functional e-commerce platform designed to provide a seaml
 
 ### Deployment
 - **Render**: For hosting the backend and frontend.
-
-## Demo
-
-Check out the live demo of HamroPasal: [Live Demo](https://your-website-link.com) <!-- Replace with your live website link -->
-
-![HamroPasal Screenshot](./screenshot.png) <!-- Replace with the path to your screenshot -->
 
 ## Usage
 
