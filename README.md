@@ -18,7 +18,7 @@ HamroPasal is a fully functional e-commerce platform designed to provide a seaml
 
 ## Demo
 
-Check out the live demo of HamroPasal: [Live Demo]((https://hamropasal-1.onrender.com)) 
+Check out the live demo of HamroPasal: [Live Website Demo](https://hamropasal-1.onrender.com) 
 
 ![HamroPasal Screenshot](./Demo%20Image/Cart.png)
 ![HamroPasal Screenshot](./Demo%20Image/Product.png)
